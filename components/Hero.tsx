@@ -1,6 +1,7 @@
 'use client';
-import React from 'react';
+
 import Image from 'next/image';
+
 import { CustomButton } from '.';
 
 const Hero = () => {
@@ -33,7 +34,6 @@ const Hero = () => {
 						className='object-contain'
 					/>
 				</div>
-
 				<div className='hero__image-overlay' />
 			</div>
 		</div>
