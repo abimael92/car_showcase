@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 
 import SearchManufacturer from './SearchManufacturer';
+import SearchModel from './SearchModel';
 import { useRouter } from 'next/navigation';
 
 const SearchButton = ({ otherClasses }: { otherClasses: string }) => (
@@ -51,11 +52,11 @@ const SearchBar = () => {
         }
 
         // Generate the new pathname with the updated search parameters
-        const newPathname = `${
+        const newPathName = `${
             window.location.pathname
         }?${searchParams.toString()}`;
 
-        router.push(newPathname);
+        router.push(newPathName, { scroll: false });
     };
 
     return (
@@ -67,6 +68,7 @@ const SearchBar = () => {
                 />
                 <SearchButton otherClasses="sm:hidden" />
             </div>
+
             <div className="searchbar__item">
                 <Image
                     src="/model-icon.png"
@@ -78,6 +80,7 @@ const SearchBar = () => {
                 <input
                     type="text"
                     name="model"
+                    autoComplete="off"
                     value={model}
                     onChange={e => setModel(e.target.value)}
                     placeholder="Jetta..."
