@@ -5,13 +5,13 @@ export async function fetchCars(filters: FilterProps) {
 
     // Set the required headers for the API request
     const headers: HeadersInit = {
-        'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_API_KEY || '',
+        'X-RapidAPI-Key': process.env.RAPID_API_KEY || '',
         'X-RapidAPI-Host': 'cars-by-api-ninjas.p.rapidapi.com',
     };
 
     // Set the required headers for the API request
     const response = await fetch(
-        `${process.env.NEXT_PUBLIC_RAPID_API_BASE_URL}/v1/cars?make=${manufacturer}&year=${year}&model=${model}&limit=${limit}&fuel_type=${fuel}`,
+        `${process.env.RAPID_API_BASE_URL}/v1/cars?make=${manufacturer}&year=${year}&model=${model}&limit=${limit}&fuel_type=${fuel}`,
         {
             headers: headers,
         }
@@ -42,10 +42,7 @@ export const generateCarImageUrl = (car: CarProps, angle?: string) => {
     const url = new URL('https://cdn.imagin.studio/getimage');
     const { make, model, year } = car;
 
-    url.searchParams.append(
-        'customer',
-        process.env.NEXT_PUBLIC_IMAGIN_API_KEY || ''
-    );
+    url.searchParams.append('customer', process.env.IMAGIN_API_KEY || '');
     url.searchParams.append('make', make);
     url.searchParams.append('modelFamily', model.split(' ')[0]);
     url.searchParams.append('zoomType', 'fullscreen');
@@ -75,13 +72,13 @@ export async function fetchModels(filters: FilterProps) {
     const { manufacturer, year, model, limit, fuel } = filters;
 
     const headers: HeadersInit = {
-        'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_API_KEY || '',
+        'X-RapidAPI-Key': process.env.RAPID_API_KEY || '',
         'X-RapidAPI-Host': 'cars-by-api-ninjas.p.rapidapi.com',
     };
 
     try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_RAPID_API_BASE_URL}/models?manufacturer=${manufacturer}`
+            `${process.env.RAPID_API_BASE_URL}/models?manufacturer=${manufacturer}`
         );
         const data = await response.json();
         return data.models; // Assuming the API response provides an array of model names
