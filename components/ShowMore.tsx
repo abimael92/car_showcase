@@ -14,9 +14,9 @@ const ShowMore = ({ pageNumber, isNext }: ShowMoreProps) => {
         const newLimit = (pageNumber + 1) * 10;
 
         // Update the "limit" search parameter in the URL with the new value
-        const newPathname = updateSearchParams('limit', `${newLimit}`);
+        const newPathName = updateSearchParams('limit', `${newLimit}`);
 
-        router.push(newPathname);
+        router.push(newPathName, { scroll: false });
     };
 
     return (

@@ -6,13 +6,12 @@ export async function fetchCars(filters: FilterProps) {
     // Set the required headers for the API request
     const headers: HeadersInit = {
         'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_API_KEY || '',
-        // 'X-RapidAPI-Key': '717449cec2msh8e01a145ed06b37p1e5072jsn60ef7ff90bde',
         'X-RapidAPI-Host': 'cars-by-api-ninjas.p.rapidapi.com',
     };
 
     // Set the required headers for the API request
     const response = await fetch(
-        `https://cars-by-api-ninjas.p.rapidapi.com/v1/cars?make=${manufacturer}&year=${year}&model=${model}&limit=${limit}&fuel_type=${fuel}`,
+        `${process.env.NEXT_PUBLIC_RAPID_API_BASE_URL}/v1/cars?make=${manufacturer}&year=${year}&model=${model}&limit=${limit}&fuel_type=${fuel}`,
         {
             headers: headers,
         }
@@ -65,12 +64,32 @@ export const updateSearchParams = (type: string, value: string) => {
     searchParams.set(type, value);
 
     // Set the specified search parameter to the given value
-    const newPathname = `${
+    const newPathName = `${
         window.location.pathname
     }?${searchParams.toString()}`;
 
-    return newPathname;
+    return newPathName;
 };
+
+export async function fetchModels(filters: FilterProps) {
+    const { manufacturer, year, model, limit, fuel } = filters;
+
+    const headers: HeadersInit = {
+        'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_API_KEY || '',
+        'X-RapidAPI-Host': 'cars-by-api-ninjas.p.rapidapi.com',
+    };
+
+    try {
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_RAPID_API_BASE_URL}/models?manufacturer=${manufacturer}`
+        );
+        const data = await response.json();
+        return data.models; // Assuming the API response provides an array of model names
+    } catch (error) {
+        console.error('Error fetching models:', error);
+        return []; // Return an empty array in case of error
+    }
+}
 
 /* 
 rapidapi
@@ -81,7 +100,7 @@ const url = 'https://cars-by-api-ninjas.p.rapidapi.com/v1/cars?model=corolla';
 const options = {
 	method: 'GET',
 	headers: {
-		'X-RapidAPI-Key': '717449cec2msh8e01a145ed06b37p1e5072jsn60ef7ff90bde',
+		'X-RapidAPI-Key': '',
 		'X-RapidAPI-Host': 'cars-by-api-ninjas.p.rapidapi.com'
 	}
 };
