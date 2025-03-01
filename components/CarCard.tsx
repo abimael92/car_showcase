@@ -3,7 +3,7 @@
 import { CarProps } from '@/types';
 import Image from 'next/image';
 import CustomButton from './CustomButton';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { calculateCarRent, generateCarImageUrl } from '@/utils';
 import CarDetails from './CarDetails';
 
@@ -11,12 +11,53 @@ interface CarCardProps {
     car: CarProps;
 }
 
+const driveType = (drive: string) => {
+    switch (drive.toLowerCase()) {
+        case 'f':
+            return {
+                abbreviation: 'FWD',
+                fullText: 'Front-Wheel Drive'
+            };
+        case 'r':
+            return {
+                abbreviation: 'RWD',
+                fullText: 'Rear-Wheel Drive'
+            };
+        case '4':
+            return {
+                abbreviation: 'AWD',
+                fullText: 'All-Wheel Drive'
+            };
+        case '4x4':
+            return {
+                abbreviation: '4x4',
+                fullText: 'Four-Wheel Drive'
+            };
+        default:
+            return {
+                abbreviation: 'Unknown',
+                fullText: 'Unknown Drive Type'
+            };
+    }
+};
+
+
 const CarCard = ({ car }: CarCardProps) => {
     const { city_mpg, year, make, model, transmission, drive } = car;
 
     const [isOpen, setIsOpen] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     const carRent = calculateCarRent(city_mpg, year);
+
+    useEffect(() => {
+        const fetchImageUrl = async () => {
+            const url = await generateCarImageUrl(car);
+            setImageUrl(url);
+        };
+
+        fetchImageUrl();
+    }, [car]);
 
     return (
         <div className="car-card group">
@@ -34,17 +75,21 @@ const CarCard = ({ car }: CarCardProps) => {
                     /day
                 </span>
             </p>
-
             <div className="relative w-full h-40 my-3 object-contain">
-                <Image
-                    src={generateCarImageUrl(car)}
-                    alt="car model"
-                    fill
-                    priority
-                    className="object-contain"
-                />
+            {imageUrl ? (
+                    <Image
+                        src={imageUrl}
+                        alt="car model"
+                        width={500}   // Example width
+                        height={300}  // Example height
+                        unoptimized
+                        className="object-contain"
+                        style={{ maxWidth: '100%', height: 'auto' }} // Makes the image responsive
+                    />
+                ) : (
+                    <div>Loading...</div>  // Display a loading state until image is ready
+                )}
             </div>
-
             <div className="relative flex w-full mt-2">
                 <div className="flex group-hover:invisible w-full justify-between text-grey">
                     <div className="flex flex-col justify-center items-center gap-2">
@@ -54,9 +99,9 @@ const CarCard = ({ car }: CarCardProps) => {
                             height={20}
                             alt="steering wheel"
                         />
-                        <p className="text-[14px] leading-[17px]">
-                            {transmission === 'a' ? 'Automatic' : 'Manual'}
-                        </p>
+                        <div className="car-card__icon-text">
+                                <p className="drive-type"> {transmission === 'a' ? 'Automatic' : 'Manual'}</p>
+                        </div>
                     </div>
                     <div className="car-card__icon">
                         <Image
@@ -65,9 +110,10 @@ const CarCard = ({ car }: CarCardProps) => {
                             height={20}
                             alt="seat"
                         />
-                        <p className="car-card__icon-text">
-                            {drive.toUpperCase()}
-                        </p>
+                            <div className="car-card__icon-text">
+                                <p className="drive-type">{`(${driveType(drive).abbreviation})`}</p>
+                                <p className="full-text">{driveType(drive).fullText}</p>
+                        </div>
                     </div>
                     <div className="car-card__icon">
                         <Image

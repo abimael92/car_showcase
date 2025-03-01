@@ -17,18 +17,20 @@ export interface SearchManuFacturerProps {
 
 export interface CarProps {
     city_mpg: number;
-    class: string;
-    combination_mpg: number;
-    cylinders: number;
-    displacement: number;
     drive: string;
-    fuel_type: string;
-    highway_mpg: number;
+    fuel_type?: string;
+    highway_mpg?: number;
     make: string;
     model: string;
     transmission: string;
     year: number;
+    class?: string;  // Make these properties optional
+    combination_mpg?: number;
+    cylinders?: number;
+    displacement?: number;
 }
+
+
 
 export interface FilterProps {
     manufacturer?: string;
@@ -38,20 +40,7 @@ export interface FilterProps {
     fuel?: string;
 }
 
-export interface CarProps {
-    city_mpg: number;
-    class: string;
-    combination_mpg: number;
-    cylinders: number;
-    displacement: number;
-    drive: string;
-    fuel_type: string;
-    highway_mpg: number;
-    make: string;
-    model: string;
-    transmission: string;
-    year: number;
-}
+
 
 export interface HomeProps {
     searchParams: FilterProps;
